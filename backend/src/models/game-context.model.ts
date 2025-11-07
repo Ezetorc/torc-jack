@@ -4,5 +4,4 @@ export type GameContext = {
   ws: WebSocket
   user: Player
   players: Map<WebSocket, Player>
-  pot: number
 }

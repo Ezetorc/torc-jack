@@ -7,11 +7,10 @@ import { onError } from "./events/on-error.event.ts";
 import { buildPlayer } from "./utilities/build-player.utility.ts";
 
 const players = new Map<WebSocket, Player>()
-const pot = 0
 
 export function onConnect(ws: WebSocket) {
   const user = buildPlayer()
-  const context: GameContext = { players, pot, ws, user }
+  const context: GameContext = { players, ws, user }
 
   players.set(ws, user)
 
@@ -32,4 +31,3 @@ Deno.serve((request) => {
 
   return response;
 });
-
