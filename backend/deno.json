@@ -3,6 +3,7 @@
     "dev": "deno run --watch --allow-net src/index.ts"
   },
   "imports": {
+    "@biomejs/biome": "npm:@biomejs/biome@^2.3.3",
     "@std/assert": "jsr:@std/assert@1"
   }
 }

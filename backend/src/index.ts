@@ -1,59 +1,24 @@
 import { Player } from "../.././shared/models/player.model.ts"
-import type { WelcomeResponse } from "../../shared/responses/welcome.response.ts"
-import type { UpdateResponse } from "../../shared/responses/update.response.ts"
-import type { ErrorResponse } from "../../shared/responses/error.response.ts"
-import type { Request } from "../../shared/models/request.model.ts"
+import { GameContext } from "./models/game-context.model.ts";
+import { onOpen } from "./events/on-open.event.ts";
+import { onClose } from "./events/on-close.event.ts";
+import { onMessage } from "./events/on-message.event.ts";
+import { onError } from "./events/on-error.event.ts";
+import { buildPlayer } from "./utilities/build-player.utility.ts";
 
 const players = new Map<WebSocket, Player>()
 const pot = 0
 
-function update() {
-  const payload = JSON.stringify({ type: 'update', players: Array.from(players.values()), pot } as UpdateResponse)
-  for (const sock of players.keys()) {
-    sock.send(payload)
-  }
-}
+export function onConnect(ws: WebSocket) {
+  const user = buildPlayer()
+  const context: GameContext = { players, pot, ws, user }
 
-export function handleConnection(ws: WebSocket) {
-  const id = crypto.randomUUID()
+  players.set(ws, user)
 
-  players.set(ws, new Player({ id, name: `Jack-${id.slice(0, 4)}` }))
-  const player = players.get(ws)
-
-  if (!player) {
-    console.error('Player not found')
-    return
-  }
-
-  ws.onopen = () => {
-    console.log(`${player.name} connected`)
-    ws.send(JSON.stringify({ type: 'welcome', id, name: player.name } as WelcomeResponse))
-    update()
-  }
-
-  ws.onmessage = (event: MessageEvent) => {
-    try {
-      const request = JSON.parse(event.data) as Request
-
-      switch (request.type) {
-        case 'hit':
-          update()
-          break;
-        case 'stand':
-          update()
-          break;
-      }
-    } catch (error) {
-      console.error(error)
-      ws.send(JSON.stringify({ type: 'error', message: error } as ErrorResponse))
-    }
-  }
-
-  ws.onclose = () => {
-    console.log(`🔴 ${player.name} disconnected`)
-    players.delete(ws)
-    update()
-  }
+  ws.onmessage = (event) => onMessage(context, event)
+  ws.onerror = (event) => onError(event)
+  ws.onclose = () => onClose(context)
+  ws.onopen = () => onOpen(context)
 }
 
 Deno.serve((request) => {
@@ -63,7 +28,7 @@ Deno.serve((request) => {
 
   const { socket, response } = Deno.upgradeWebSocket(request);
 
-  handleConnection(socket);
+  onConnect(socket);
 
   return response;
 });

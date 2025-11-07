@@ -1,7 +1,6 @@
 import type { Card } from "../../../shared/models/card.model"
 import type { Player } from "../../../shared/models/player.model"
 
-
 export class PlayerList {
   players: Player[]
 
