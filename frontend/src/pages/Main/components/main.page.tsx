@@ -8,7 +8,7 @@ import { useLocation } from "wouter";
 export default function MainPage() {
   const [name, setName] = useState<string>("")
   const { setConnected, connected, setUser } = useUser()
-  const { setSocket, setPlayers, setPot, players, pot } = useGame()
+  const { setSocket, setPlayers, players } = useGame()
   const [, setLocation] = useLocation()
 
   const onChangeName = (event: ChangeEvent<HTMLInputElement>) => {
@@ -18,9 +18,10 @@ export default function MainPage() {
   const onEnterGame = () => {
     if (!name) return
 
-    const newSocket = new SocketService({ setPlayers, players, pot, setPot, setConnected, connected, setUser }, name)
+    const newSocket = new SocketService({ setPlayers, players, setConnected, connected, setUser }, name)
 
     setSocket(newSocket)
+
     setLocation("/play")
   }
 

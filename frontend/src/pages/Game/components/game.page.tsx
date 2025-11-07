@@ -5,7 +5,7 @@ import { useUser } from "../../../hooks/use-user.hook";
 
 export default function GamePage() {
   const { user } = useUser()
-  const { players, pot, socket } = useGame()
+  const { players, socket } = useGame()
 
   if (!socket || !user) return
 
@@ -32,10 +32,6 @@ export default function GamePage() {
             ))}
           </article>
         ))}
-
-        <div className='absolute w-full h-full flex items-center justify-center'>
-          <div className='bg-red-500 p-4 rounded-2xl text-2xl'>${pot}</div>
-        </div>
       </section>
 
       <div className='fixed h-44 flex items-center justify-center gap-x-12 w-full bottom-0 right-0'>

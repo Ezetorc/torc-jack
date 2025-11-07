@@ -19,7 +19,12 @@ export class SocketService {
     this.socket.onmessage = this.onMessage.bind(this);
   }
 
+  get isConnected() {
+    return this.context.connected;
+  }
+
   send(request: Request) {
+    if (!this.isConnected) return
     this.socket.send(JSON.stringify(request));
   }
 
@@ -34,6 +39,7 @@ export class SocketService {
   }
 
   onWelcome(data: WelcomeResponse) {
+    if (!this.isConnected) return
     const newUser = new Player({ id: data.user.id, name: data.user.name })
     const newPlayers = new PlayerList([...this.context.players?.all ?? [], newUser])
 
@@ -42,11 +48,12 @@ export class SocketService {
   }
 
   onUpdate(data: UpdateResponse) {
+    if (!this.isConnected) return
     this.context.setPlayers(new PlayerList(data.players));
-    this.context.setPot(data.pot ?? 0);
   }
 
   onError(data: ErrorResponse) {
+    if (!this.isConnected) return
     console.error(data.message);
   }
 
