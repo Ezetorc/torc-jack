@@ -1,7 +1,6 @@
-import { Player } from "../../../shared/models/player.model.ts";
+import { Player } from '../../../shared/models/player.model.ts'
 
-export function buildPlayer() {
-  const id = crypto.randomUUID()
-  const name = `Torc-${id.slice(0, 4)}`
-  return new Player({ id, name })
+export function buildPlayer(name: string) {
+	const id = crypto.randomUUID()
+	return new Player({ id, name })
 }

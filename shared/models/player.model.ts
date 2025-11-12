@@ -1,30 +1,27 @@
-import type { Card } from "../../shared/models/card.model"
+import { Card } from "../../shared/models/card.model.ts"
 
 export class Player {
   id: `${string}-${string}-${string}-${string}-${string}`
   name: string
-  isDealer: boolean
-  chips: number
   cards: Card[]
-  lastAction: 'fold' | 'check' | 'call' | 'raise'
+  isReady: boolean
 
   constructor(props: {
     id: Player['id']
     name: Player['name']
-    isDealer?: Player['isDealer']
-    chips?: Player['chips']
     cards?: Player['cards']
+    isReady?: Player['isReady']
   }) {
     this.id = props.id
     this.name = props.name
-    this.isDealer = props.isDealer || false
-    this.chips = props.chips || 2000
     this.cards = props.cards || []
-    this.lastAction = 'check'
+    this.isReady = props.isReady || false
   }
 
-  has(card: Card) {
-    return this.cards.some((c) => c.id === card.id)
+  get value() {
+    const value = this.cards.reduce((acc, card) => acc + Card.valueMap[card.value], 0)
+
+    return value > 21 ? value - 10 : value
   }
 
   get hasCompleteDeck() {

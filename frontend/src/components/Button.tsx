@@ -7,9 +7,8 @@ export function Button(
 ) {
 	return (
 		<button
-			type='button'
-			className={`cursor-pointer text-3xl p-5 rounded-2xl ${props.className}`}
 			{...props}
+			className={`font-medium cursor-pointer hover:-translate-y-1 transition-transform p-5 rounded-2xl ${props.className}`}
 		>
 			{props.children}
 		</button>

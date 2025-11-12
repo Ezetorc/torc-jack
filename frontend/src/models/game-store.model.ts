@@ -1,11 +1,11 @@
-import type { SocketService } from "../services/socket.service"
-import type { PlayerList } from "./player-list.model"
+import type { Player } from '../../../shared/models/player.model'
+import type { SocketService } from '../services/socket.service'
 
 export type GameStore = {
-  players?: PlayerList,
-  setPlayers: (players: PlayerList) => void,
-  pot: number,
-  setPot: (pot: number) => void,
-  socket?: SocketService,
-  setSocket: (socket: SocketService) => void
+  players?: Player[]
+  setPlayers: (players?: Player[]) => void
+  socket?: SocketService
+  setSocket: (socket?: SocketService) => void
+  turn?: number
+  setTurn: (turn?: number) => void
 }

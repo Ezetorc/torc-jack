@@ -1,7 +1,7 @@
 type Env = {
-  apiUrl: string
+	apiUrl: string
 }
 
 export const env: Env = {
-  apiUrl: import.meta.env.VITE_API_URL
+	apiUrl: import.meta.env.VITE_API_URL
 }
